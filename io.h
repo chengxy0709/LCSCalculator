@@ -22,6 +22,7 @@ using namespace std;
 class MLCSIO{
 	
 public:
+	MLCSIO(){}
 	MLCSIO(vector<string>& seqs):seqs(seqs){}
 	MLCSIO(string filename);
 	~MLCSIO(){}

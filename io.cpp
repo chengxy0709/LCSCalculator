@@ -7,7 +7,7 @@ MLCSIO::MLCSIO(string filename) : filename(filename){
 		string seq;
 		while(!f.eof()){
 			getline(f, seq);
-			seqs.push_back(seq);
+			if(seq.size() > 1) seqs.push_back(seq);
 		}
 	}
 		
@@ -17,6 +17,12 @@ void MLCSIO::output(ostream& os, string algo, string alphasets){
 	
 	if(seqs.size() == 0){
 		os << "Test Set is empty!\n";
+	}
+	else{
+		os << "Test set:" << endl;
+		for(int i = 0; i < seqs.size(); i++){
+			os << seqs[i] << endl;
+		}
 	}
 	if(algo == TOPMLCSSYM){
 		TOP_MLCS topmlcs(seqs, alphasets);

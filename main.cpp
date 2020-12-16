@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <malloc.h>
+#include <unistd.h>
 #include <time.h>
 #include <fstream>
 
@@ -8,49 +9,82 @@
 
 using namespace std;
 
-// argument list:
-// algorithm
-// algorithm outposition
-// algorithm filename alphabets
-// algorithm outposition filename alphabets
+struct Arguments
+{
+	string alg;
+	string outputfile;
+	string inputfile;
+	string alphabets;
+};
+
+
+static void Usage(){
+    cout << "Usage:" << endl;
+    cout << "-a <alphabets>    -----  specify a file store sequences." << endl;
+    cout << "-A <algorithm>    -----  select a algorithm <TOPMLCS|MLCSAPP|PROMLCS|QUICKDP>." << endl;
+    cout << "-o <outputfile>   -----  specify a output file." << endl; 
+    cout << "-i <inputfile>    -----  specify a input file." << endl;
+	cout << "\nusing some default options..." << endl;
+}
+
+void getargs(int argc, char* argv[], Arguments& args);
+
 int main(int argc, char* argv[]){
 	
-	string str = "ATCG";
+	Arguments args;
+	MLCSIO mlcs;
 	vector<string> seqs{"ACTAGTGC", "TGCTAGCA", "CATGCGAT"};
 
-	if(argc <= 1){
-		cout << "argument too few.\n";
+	cout << "LCS Calculator\n";
+	getargs(argc, argv, args);
+	if(args.inputfile.length() == 0){
+		mlcs = MLCSIO(seqs);
 	}
-	else if(argc == 2){
-		MLCSIO mlcs(seqs);
-		mlcs.output(cout, string(argv[1]), str);
+	else
+	{
+		mlcs = MLCSIO(args.inputfile);
 	}
-	else if(argc == 3){
-		MLCSIO mlcs(seqs);
-		filebuf fb;
-		fb.open(string(argv[2]), ios::out);
-		ostream of(&fb);
-		mlcs.output(of, string(argv[1]), str);
-	}
-	else if(argc == 4){
-		string filename(argv[2]);
-		string alphabets(argv[3]);
-		MLCSIO mlcs(filename);
-		mlcs.output(cout, string(argv[1]), alphabets);
-	}
-	else if(argc == 5){
-		string filename(argv[3]);
-		string alphabets(argv[4]);
-		MLCSIO mlcs(filename);
-		filebuf fb;
-		fb.open(string(argv[2]), ios::out);
-		ostream of(&fb);
-		mlcs.output(of, string(argv[1]), alphabets);
+	if(args.outputfile.length() == 0){
+		mlcs.output(cout, args.alg, args.alphabets);
 	}
 	else{
-		cout << "argument too many.\n";
+		filebuf fb;
+		fb.open(args.outputfile, ios::out | ios::trunc);
+		ostream of(&fb);
+		mlcs.output(of, args.alg, args.alphabets);
 	}
 
 	return 0;
+
+}
+
+void getargs(int argc, char* argv[], Arguments& args){
+    
+    int ch;
+    args.alphabets = "ACGT";
+    args.alg = "TOPMLCS";
+    args.inputfile = "";
+    args.outputfile = "";
+
+    while((ch = getopt(argc, argv, "a:A:i:o:")) != -1){
+        switch (ch)
+        {
+        case 'a':
+            args.alphabets = optarg;
+            break;
+        case 'A':
+            args.alg = optarg;
+            break;
+        case 'i':
+            args.inputfile = optarg;
+            break;
+        case 'o':
+            args.outputfile = optarg;
+            break;
+        default:
+            Usage();
+            break;
+        }
+    }
 
 }
