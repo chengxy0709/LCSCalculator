@@ -95,6 +95,23 @@ void MLCSIO::output(ostream& os, string algo, string alphasets){
 		os << "the length of lcs : " << lcs.length() << "\n";
 		os << "a lcs : " << lcs << "\n";
 	}
+	else if(algo == RLPMLCSSYM){
+		RLP_MLCS rlpmlcs(seqs, alphasets);
+		vector<string> mlcs;
+		clock_t start_t, end_t;
+		
+		start_t = clock();
+		rlpmlcs.run();
+		end_t = clock();
+		mlcs = rlpmlcs.MLCS();
+		os << "Result(by " << algo << "):\n";
+		os << "time(us) : " << end_t - start_t << "\n";
+		os << "the length of lcs : " << mlcs[0].length() << "\n";
+		os << "all lcs : \n";
+		for(int i = 0; i < mlcs.size(); i++){
+			os << i << " : " << mlcs[i] << "\n";
+		}
+	}
 	else{
 		os << "'" << algo << "' is undefined.\n";
 	}

@@ -11,11 +11,13 @@
 #include "MLCSAPP.h"
 #include "PRO_MLCS.h"
 #include "QuickDP.h"
+#include "RLP_MLCS.h"
 
 #define TOPMLCSSYM "TOPMLCS"
 #define MLCSAPPSYM "MLCSAPP"
 #define PROMLCSSYM "PROMLCS"
 #define QUICKDPSYM "QUICKDP"
+#define RLPMLCSSYM "RLPMLCS"
 
 using namespace std;
 
