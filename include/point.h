@@ -13,7 +13,7 @@ using namespace std;
 #define COMADDR(point) ((void*)(point))
 
 #define SETATTRINT(point, val) (point = (void*)val)
-#define ATTRINT(point) ((int)point)
+#define ATTRINT(point) ((unsigned int)point)
 
 template <class T>
 struct Point{
