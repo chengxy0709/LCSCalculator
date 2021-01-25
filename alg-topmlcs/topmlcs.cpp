@@ -1,4 +1,4 @@
-#include "TOP_MLCS.h"
+#include "topmlcs.h"
 
 TOP_MLCS::TOP_MLCS(vector<string>& seqs, string& alphabets){
 
@@ -151,4 +151,29 @@ void TOP_MLCS::GetMLCS(string& LCSRecord, int index){
 TOP_MLCS::~TOP_MLCS(){
 	
 	
+}
+
+int exe_topmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+    TOP_MLCS topmlcs(seqs, alphasets);
+    vector<string> mlcs;
+    clock_t start_t, end_t;
+    
+    if(algo == TOPMLCSSYM){
+        start_t = clock();
+        topmlcs.run();
+        end_t = clock();
+        mlcs = topmlcs.MLCS();
+        os << "Result(by " << algo << "):\n";
+        os << "time(us) : " << end_t - start_t << "\n";
+        os << "the length of lcs : " << mlcs[0].length() << "\n";
+        os << "all lcs : \n";
+        for(int i = 0; i < mlcs.size(); i++){
+            os << i << " : " << mlcs[i] << "\n";
+        }
+        return 0;
+    }
+    else{
+        return -1;
+    }
+
 }

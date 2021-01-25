@@ -9,16 +9,17 @@ using namespace std;
 
 #define CordType char
 
-#define ATTR(OBJ, point) ((OBJ*)point)
-#define COMADDR(point) ((void*)(point))
+#define ATTR(ATTRTYPE, point) ((ATTRTYPE*)(point->attr))
+#define PSETATTR(point, ATTR) point->attr = (void*)(ATTR)
+#define SETATTR(point, ATTR) point.attr = (void*)(ATTR)
 
-#define SETATTRINT(point, val) (point = (void*)val)
-#define ATTRINT(point) ((unsigned int)point)
+#define SETATTRINT(point, val) (point->attr = (void*)val)
+#define ATTRINT(point) ((unsigned long)point->attr)
 
 template <class T>
 struct Point{
-	T *cord;
-	void *attr;
+	T *cord{NULL};
+	void *attr{NULL};
 	Point(int num = 0, bool randcord = true, int val = 1){
 		if(num <= 0) cord = NULL;
 		else{

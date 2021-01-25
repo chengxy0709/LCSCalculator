@@ -1,4 +1,4 @@
-#include "WDAG.h"
+#include "wdag.h"
 
 WDAG::WDAG(vector<string>& seqs, string alphabets):seqs(seqs){
 

@@ -7,10 +7,15 @@
 #include <queue>
 #include <list>
 #include <algorithm>
+#include <time.h>
 
 #include "point.h"
 #include "phash.h"
 #include "tool.h"
+
+#define ALG_REQUIRED
+
+#define TOPMLCSSYM "TOPMLCS"
 
 class TOP_MLCS{
 
@@ -36,5 +41,7 @@ private:
     vector< list<int> > precursor;
 
 };
+
+int exe_topmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
 
 #endif // TOP_MLCS_H

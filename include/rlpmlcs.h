@@ -12,6 +12,10 @@
 #include "phash.h"
 #include "tool.h"
 
+#define ALG_NO_REQUIRED
+
+#define RLPMLCSSYM "RLPMLCS"
+
 class RLP_MLCS{
 
 public:	
@@ -39,5 +43,7 @@ private:
     vector<bool> inLCSPath;
 
 };
+
+int exe_rlpmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
 
 #endif // RLP_MLCS_H

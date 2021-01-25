@@ -21,7 +21,7 @@ struct Arguments
 static void Usage(){
     cout << "Usage:" << endl;
     cout << "-a <alphabets>    -----  specify a file store sequences." << endl;
-    cout << "-A <algorithm>    -----  select a algorithm <TOPMLCS|MLCSAPP|PROMLCS|QUICKDP>." << endl;
+    cout << "-A <algorithm>    -----  select a algorithm <TOPMLCS|MLCSAPP|...>." << endl;
     cout << "-o <outputfile>   -----  specify a output file." << endl; 
     cout << "-i <inputfile>    -----  specify a input file." << endl;
 	cout << "\nusing some default options..." << endl;

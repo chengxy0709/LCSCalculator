@@ -8,6 +8,10 @@
 #include "phash.h"
 #include "tool.h"
 
+#define ALG_REQUIRED
+
+#define MLCSAPPSYM "MLCSAPP"
+
 using namespace std;
 
 struct Attribute{
@@ -39,5 +43,7 @@ private:
 	int CONSTK;
 	int CONSTC;
 };
+
+int exe_mlcsapp(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
 
 #endif // MLCSAPP_H

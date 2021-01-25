@@ -1,8 +1,8 @@
-#include "PRO_MLCS.h"
+#include "promlcs.h"
 
 struct comp{
     bool operator() (const Point<CordType> *p1, const Point<CordType> *p2){
-        return ATTRINT(p1->attr) > ATTRINT(p2->attr);
+        return ATTRINT(p1) > ATTRINT(p2);
     }
 };
 
@@ -111,7 +111,7 @@ void PRO_MLCS::run(){
 	Point<CordType> *p = new Point<CordType>(seqs.size(), false, 0);
     Layer *layer = new Layer(seqs.size());
 
-	SETATTRINT(p->attr, 0);
+	SETATTRINT(p, 0);
     layer->addpriq(p);
 
     layers.push_back(layer);
@@ -178,4 +178,30 @@ void PRO_MLCS::run(){
 		delete l;
 	}
 	
+}
+
+int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+    if(algo == PROMLCSSYM){
+        /* else argument*/
+		int scnum;
+		cout << "The number of calculating point in a single iteration(negative value respresents default value) > ";
+		cin >> scnum;
+		
+		PRO_MLCS promlcs(seqs, alphasets, scnum);
+		string lcs;
+		clock_t start_t, end_t;
+		
+		start_t = clock();
+		promlcs.run();
+		end_t = clock();
+		lcs = promlcs.LCS();
+		os << "Result(by " << algo << "):\n";
+		os << "time(us) : " << end_t - start_t << "\n";
+		os << "the length of lcs : " << lcs.length() << "\n";
+		os << "a lcs : " << lcs << "\n";
+        return 0;
+    }
+    else{
+        return -1;
+    }
 }

@@ -9,6 +9,10 @@
 #include "tool.h"
 #include "phash.h"
 
+#define ALG_REQUIRED
+
+#define QUICKDPSYM "QUICKDP"
+
 class QuickDP{
 	
 public:
@@ -32,5 +36,7 @@ private:
 	string lcs;
 	
 };
+
+int exe_quickdp(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
 
 #endif //QUICK_DP_H

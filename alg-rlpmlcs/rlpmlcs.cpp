@@ -1,4 +1,4 @@
-#include "RLP_MLCS.h"
+#include "rlpmlcs.h"
 
 static vector<int> firstlayer;
 
@@ -238,4 +238,28 @@ void RLP_MLCS::GetMLCS(string& LCSRecord, int index){
 RLP_MLCS::~RLP_MLCS(){
 	
 	
+}
+
+int exe_rlpmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+    if(algo == RLPMLCSSYM){
+        RLP_MLCS rlpmlcs(seqs, alphasets);
+		vector<string> mlcs;
+		clock_t start_t, end_t;
+		
+		start_t = clock();
+		rlpmlcs.run();
+		end_t = clock();
+		mlcs = rlpmlcs.MLCS();
+		os << "Result(by " << algo << "):\n";
+		os << "time(us) : " << end_t - start_t << "\n";
+		os << "the length of lcs : " << mlcs[0].length() << "\n";
+		os << "all lcs : \n";
+		for(int i = 0; i < mlcs.size(); i++){
+			os << i << " : " << mlcs[i] << "\n";
+		}
+        return 0;
+    }
+    else{
+        return -1;
+    }
 }

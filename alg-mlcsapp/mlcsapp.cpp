@@ -1,4 +1,4 @@
-#include "MLCSAPP.h"
+#include "mlcsapp.h"
 
 MLCSAPP::MLCSAPP(vector<string>& seqs, string& alphabets, int k, int c){
 	
@@ -45,7 +45,7 @@ void MLCSAPP::computeF(Point<CordType> *p){
 		h = min(h, ScoreTabs[i][p->cord[i1]][p->cord[i2]]);
 	}
 
-	ATTR(Attribute, p->attr)->f = h + ATTR(Attribute, p->attr)->g;
+	ATTR(Attribute, p)->f = h + ATTR(Attribute, p)->g;
 	
 }
 
@@ -53,14 +53,14 @@ void MLCSAPP::computeF(Point<CordType> *p){
 int MLCSAPP::getLCS( Point<CordType>* p ) {
 	while(p->cord[0] != 0){
 		lcs = seqs[0][p->cord[0] - 1] + lcs;
-		p = ATTR(Attribute, p->attr)->parent;
+		p = ATTR(Attribute, p)->parent;
 	}
 	return lcs.length();
 }
 
 struct Greater_Fun{
     size_t operator() (const Point<CordType>* a, const Point<CordType>* b) const{
-        return ATTR(Attribute, a->attr)->f > ATTR(Attribute, b->attr)->f;
+        return ATTR(Attribute, a)->f > ATTR(Attribute, b)->f;
     }
 };
 
@@ -71,7 +71,7 @@ void MLCSAPP::run(){
 	Point<CordType> *p0 = new Point<CordType>(seqs.size(), false, 0);
 	bool flag = true;
 	
-	p0->attr = COMADDR(new Attribute);
+	PSETATTR(p0, new Attribute);
 	computeF(p0);
 	nodeset.insert(p0);
 
@@ -80,14 +80,14 @@ void MLCSAPP::run(){
         int maxf = 0;
 
         for(auto& p : nodeset){
-            if(ATTR(Attribute, p->attr)->f > maxf) maxf = ATTR(Attribute, p->attr)->f;
+            if(ATTR(Attribute, p)->f > maxf) maxf = ATTR(Attribute, p)->f;
         }
         for(auto& p : nodeset){
-            if(ATTR(Attribute, p->attr)->f >= (maxf - CONSTC)){
+            if(ATTR(Attribute, p)->f >= (maxf - CONSTC)){
                 nodeset_t.push_back(p);
             }
 			else{
-				delete ATTR(Attribute, p->attr);
+				delete ATTR(Attribute, p);
 				delete p;
 			}
         }
@@ -95,7 +95,7 @@ void MLCSAPP::run(){
         if(nodeset_t.size() > CONSTK){
             sort(nodeset_t.begin(), nodeset_t.end(), Greater_Fun());
             for(unsigned int i = nodeset_t.size() - 1; i > CONSTK; i--){
-                delete ATTR(Attribute, nodeset_t.back()->attr);
+                delete ATTR(Attribute, nodeset_t.back());
 				delete nodeset_t.back();
                 nodeset_t.pop_back();
             }
@@ -105,7 +105,7 @@ void MLCSAPP::run(){
         nodeset.clear();
         flag = true;
         for(auto& p : nodeset_t){
-            if (ATTR(Attribute, p->attr)->f - ATTR(Attribute, p->attr)->g != 0) { // h(p) != 0
+            if (ATTR(Attribute, p)->f - ATTR(Attribute, p)->g != 0) { // h(p) != 0
                 flag = false;
             }
 
@@ -114,16 +114,16 @@ void MLCSAPP::run(){
 				if(suc){
 					auto q = nodeset.find(suc);
 					if (q != nodeset.end()) { //node is already in node set
-						Attribute *sucAttr = ATTR(Attribute, (*q)->attr);
-						if ( sucAttr->g < ATTR(Attribute, p->attr)->g + 1) {
+						Attribute *sucAttr = ATTR(Attribute, (*q));
+						if ( sucAttr->g < ATTR(Attribute, p)->g + 1) {
 							sucAttr->parent = p;
-							sucAttr->g = ATTR(Attribute, p->attr)->g + 1;
+							sucAttr->g = ATTR(Attribute, p)->g + 1;
 							computeF(*q);
 						}
 						delete suc;
 					} 
 					else {
-						suc->attr = COMADDR(new Attribute(0, ATTR(Attribute, p->attr)->g + 1, p));
+						PSETATTR(suc, new Attribute(0, ATTR(Attribute, p)->g + 1, p));
 						computeF(suc);
 						nodeset.insert(suc);
 					}
@@ -137,8 +137,7 @@ void MLCSAPP::run(){
 	
 	for(auto& vec : trash){
 		for(auto& p : vec){
-			delete ATTR(Attribute, p->attr);
-			delete p;
+			delete ATTR(Attribute, p);
 		}
 	}
 	
@@ -146,4 +145,32 @@ void MLCSAPP::run(){
 
 MLCSAPP::~MLCSAPP(){
 		
+}
+
+int exe_mlcsapp(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+    if(algo == MLCSAPPSYM){
+		/* else argument*/
+		int CONSTK, CONSTC;
+		cout << "The const value k(negative value respresents default value) > ";
+		cin >> CONSTK;
+		cout << "The const value c(negative value respresents default value) > ";
+		cin >> CONSTC;
+		
+		MLCSAPP mlcsapp(seqs, alphasets, CONSTK, CONSTC);
+		string lcs;
+		clock_t start_t, end_t;
+		
+		start_t = clock();
+		mlcsapp.run();
+		end_t = clock();
+		lcs = mlcsapp.LCS();
+		os << "Result(by " << algo << "):\n";
+		os << "time(us) : " << end_t - start_t << "\n";
+		os << "the length of lcs : " << lcs.length() << "\n";
+		os << "a lcs : " << lcs << "\n";
+		return 0;
+	}
+	else{
+		return -1;
+	}
 }

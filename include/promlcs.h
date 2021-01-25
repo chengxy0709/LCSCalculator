@@ -12,6 +12,10 @@
 #include "tool.h"
 #include "dtree.h"
 
+#define ALG_REQUIRED
+
+#define PROMLCSSYM "PROMLCS"
+
 using namespace std;
 
 class PRO_MLCS{
@@ -37,5 +41,7 @@ private:
 	int scnum; // the number of points that calculate in a single iteration
 	
 };
+
+int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
 
 #endif //PRO_MLCS_H

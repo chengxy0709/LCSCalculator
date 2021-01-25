@@ -1,4 +1,4 @@
-#include "QuickDP.h"
+#include "quickdp.h"
 
 QuickDP::QuickDP(vector<string> seqs, string alphabets)
  : seqs(seqs),alphaSize(alphabets.length())
@@ -166,10 +166,10 @@ vector<Point<CordType>*> QuickDP::Divide(vector< Point<CordType>* >& points, int
     // merge
     // set label
     for(auto p : Ares){
-		SETATTRINT(p->attr, 1);
+		SETATTRINT(p, 1);
     }
     for(auto p : Bres){
-		SETATTRINT(p->attr, 0);
+		SETATTRINT(p, 0);
     }
     Ares = mergeSortedVecter(Ares, Bres, 0);
     // delete the point in Ares dominated by any point in Bres
@@ -191,13 +191,13 @@ vector<Point<CordType>*> QuickDP::Union(vector< Point<CordType>* >& points, int 
     if (d == 2){ // conquer
         int ymin = INT_MAX;
         for(auto point : points){
-            if(ATTRINT(point->attr) != 0){ // label is A
+            if(ATTRINT(point) != 0){ // label is A
                 if(point->cord[1] < ymin){
                     ymin = point->cord[1];
                     if(res.size() > 0 &&
                        point->cord[0] == res.back()->cord[0] &&
                        point->cord[1] <= res.back()->cord[1] &&
-                       ATTRINT(res.back()->attr) == 0){
+                       ATTRINT(res.back()) == 0){
                         res.pop_back();
                     }
                 }
@@ -245,11 +245,11 @@ vector<Point<CordType>*> QuickDP::Union(vector< Point<CordType>* >& points, int 
     vector<Point<CordType>*> UB;
     vector<Point<CordType>*> Blabeled1; // the point labeled 1 in Bres
     for(auto p : Bres){
-        if(ATTRINT(p->attr) == 0) UB.push_back(p);
+        if(ATTRINT(p) == 0) UB.push_back(p);
         else Blabeled1.push_back(p);
     }
     for(auto p : Ares){
-        if(ATTRINT(p->attr) == 1) UA.push_back(p);
+        if(ATTRINT(p) == 1) UA.push_back(p);
     }
     UA = mergeSortedVecter(UA, UB, 0);
     vector<Point<CordType>*> Ures = Union(UA, d - 1);
@@ -260,4 +260,25 @@ vector<Point<CordType>*> QuickDP::Union(vector< Point<CordType>* >& points, int 
 
     return Ares;
 
+}
+
+int exe_quickdp(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+    if(algo == QUICKDPSYM){
+        QuickDP quickdp(seqs, alphasets);
+		string lcs;
+		clock_t start_t, end_t;
+		
+		start_t = clock();
+		quickdp.run();
+		end_t = clock();
+		lcs = quickdp.LCS();
+		os << "Result(by " << algo << "):\n";
+		os << "time(us) : " << end_t - start_t << "\n";
+		os << "the length of lcs : " << lcs.length() << "\n";
+		os << "a lcs : " << lcs << "\n";
+        return 0;
+    }
+    else{
+        return -1;
+    }
 }
