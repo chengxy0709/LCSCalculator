@@ -34,6 +34,7 @@ else if(!exe_topmlcs(seqs, alphasets, os, algo)) flag = true;
 else if(!exe_quickdp(seqs, alphasets, os, algo)) flag = true;
 else if(!exe_promlcs(seqs, alphasets, os, algo)) flag = true;
 else if(!exe_mlcsapp(seqs, alphasets, os, algo)) flag = true;
+else if(!exe_hasmlcs(seqs, alphasets, os, algo)) flag = true;
 	// alg program interface end 
 	else{
 		os << "'" << algo << "' is undefined.\n";

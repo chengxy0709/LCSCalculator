@@ -37,6 +37,11 @@ LIBSFLAGS += -lmlcsapp
 alg-mlcsapp/libmlcsapp.a:
 	cd alg-mlcsapp; make; cd ..
 
+LIBS += alg-hasmlcs/libhasmlcs.a
+LIBSFLAGS += -lhasmlcs
+alg-hasmlcs/libhasmlcs.a:
+	cd alg-hasmlcs; make; cd ..
+
 # alg program tag end
 
 TARGET = LCSCalculator

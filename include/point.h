@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#define CordType char
+#define CordType int
 
 #define ATTR(ATTRTYPE, point) ((ATTRTYPE*)(point->attr))
 #define PSETATTR(point, ATTR) point->attr = (void*)(ATTR)
@@ -44,7 +44,7 @@ struct Point{
 		attr = NULL;
 	}
 	~Point(){
-		if(cord != NULL) delete cord;
+		//if(cord != NULL) delete cord;
 	}
 
 	void print(int num, char symbol = '\n'){

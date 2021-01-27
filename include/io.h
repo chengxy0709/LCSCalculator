@@ -13,6 +13,7 @@
 #include "quickdp.h"
 #include "promlcs.h"
 #include "mlcsapp.h"
+#include "hasmlcs.h"
 // alg program header end
 
 using namespace std;
