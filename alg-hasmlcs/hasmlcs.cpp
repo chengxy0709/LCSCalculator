@@ -45,7 +45,7 @@ void HASMLCS::run(){
         
 
         // Beam Search
-        while(B.size() > 0){
+        while(!opt && B.size() > 0){
             HashSet Vext; 
             for(int i = 0; i < B.size(); i++){
                 vector< Point<CordType>* > temp = ExpandNode(B[i], Q);
@@ -76,15 +76,22 @@ void HASMLCS::run(){
 
         // A* Search
         int iter = 0;
-        while(Q.size() > 0 && iter < delta /* not time limit and not memory limit */){
+        while(!opt && iter < delta /* not time limit and not memory limit */){
             Point<CordType> *point = *(Q.begin());
             Q.erase(Q.begin());
             ExpandNode(point, Q);
             iter++;
         }
+        /*for(auto p : Q){
+            p->print(seqs.size(), '\t');
+            cout << "f:" << ATTR(HASAttr, p)->f << "g:" << ATTR(HASAttr, p)->g << "h:" << ATTR(HASAttr, p)->f - ATTR(HASAttr, p)->g << "k:" << ATTR(HASAttr, p)->k  << "\n";
+        }
+        cout << "===Q\n";*/
 
     }
-
+    
+    cout << "The remain number of points in Q : " << Q.size() << endl;
+    cout << "The number of points in set : " << pset.size() << endl;
 }
 
 vector< Point<CordType>* > HASMLCS::Filter(HashSet& Vext, int Kfilter){
@@ -152,13 +159,12 @@ vector< Point<CordType>* > HASMLCS::ExpandNode(Point<CordType>* p, set<Point<Cor
             else{ // update point
                 Point<CordType>* ep = *(res.first);
                 if(ATTR(HASAttr, ep)->g < l + 1){ // a better solution            
-                    auto num = Q.erase(ep);
+                    Q.erase(ep);
                     ATTR(HASAttr, ep)->f += l + 1 - ATTR(HASAttr, ep)->g;
                     ATTR(HASAttr, ep)->g = l + 1;
                     ATTR(HASAttr, ep)->parent = p;
                     // Actually, here should update this point's position in Q.
-                    if(num > 0) Q.insert(ep);
-                    if(num > 1) cout << num << endl;
+                    Q.insert(ep);
                 }
                 Vext.push_back(ep);
 
@@ -175,7 +181,7 @@ vector< Point<CordType>* > HASMLCS::ExpandNode(Point<CordType>* p, set<Point<Cor
         }
     }
 
-    if(Q.size() <= 0 || maxlevel > ATTR(HASAttr, (*(Q.begin())))->f){
+    if(Q.size() <= 0 || maxlevel >= ATTR(HASAttr, (*(Q.begin())))->f){
         opt = true;
     }
     
@@ -212,6 +218,7 @@ int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& al
 		cout << "The const value Kfilter(negative value respresents default value) > ";
 		cin >> k;
 		
+        g_point_size = seqs.size();
 		HASMLCS hasmlcs(seqs, alphasets, beta, delta, k);
 		string lcs;
 		clock_t start_t, end_t;

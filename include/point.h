@@ -16,6 +16,8 @@ using namespace std;
 #define SETATTRINT(point, val) (point->attr = (void*)val)
 #define ATTRINT(point) ((unsigned long)point->attr)
 
+extern int g_point_size; 
+
 template <class T>
 struct Point{
 	T *cord{NULL};
@@ -44,7 +46,7 @@ struct Point{
 		attr = NULL;
 	}
 	~Point(){
-		//if(cord != NULL) delete cord;
+		if(cord != NULL) delete cord;
 	}
 
 	void print(int num, char symbol = '\n'){

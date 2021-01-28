@@ -1,5 +1,7 @@
 #include "io.h"
 
+int g_point_size = 0;
+
 MLCSIO::MLCSIO(string filename) : filename(filename){
 	
 	ifstream f(filename);
