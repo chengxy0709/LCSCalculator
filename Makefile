@@ -22,9 +22,15 @@ LIBSFLAGS += -ltopmlcs
 alg-topmlcs/libtopmlcs.a:
 	cd alg-topmlcs; make; cd ..
 
+topmlcs:
+	cd alg-topmlcs; make; cd ..
+
 LIBS += alg-quickdp/libquickdp.a
 LIBSFLAGS += -lquickdp
 alg-quickdp/libquickdp.a:
+	cd alg-quickdp; make; cd ..
+
+quickdp:
 	cd alg-quickdp; make; cd ..
 
 LIBS += alg-promlcs/libpromlcs.a
@@ -32,14 +38,23 @@ LIBSFLAGS += -lpromlcs
 alg-promlcs/libpromlcs.a:
 	cd alg-promlcs; make; cd ..
 
+promlcs:
+	cd alg-promlcs; make; cd ..
+
 LIBS += alg-mlcsapp/libmlcsapp.a
 LIBSFLAGS += -lmlcsapp
 alg-mlcsapp/libmlcsapp.a:
 	cd alg-mlcsapp; make; cd ..
 
+mlcsapp:
+	cd alg-mlcsapp; make; cd ..
+
 LIBS += alg-hasmlcs/libhasmlcs.a
 LIBSFLAGS += -lhasmlcs
 alg-hasmlcs/libhasmlcs.a:
+	cd alg-hasmlcs; make; cd ..
+
+hasmlcs:
 	cd alg-hasmlcs; make; cd ..
 
 # alg program tag end
@@ -58,6 +73,9 @@ genTest: utils/genTest.o
 	$(CC) -o genTest utils/genTest.o $(CPPFLAGS)
 
 all: genTest $(TARGET)
+
+update-lib:
+# end target update-lib
 
 clean:
 	for i in `ls` ; do \

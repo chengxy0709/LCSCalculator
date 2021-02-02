@@ -36,6 +36,7 @@ do
         ALGNAME=`echo $i | awk -F- '{print $2}'`
         if [ -e ./include/$ALGNAME.h ]; then
             if [ `grep "#define ALG_REQUIRED" ./include/$ALGNAME.h | wc -l` -eq 1 ]; then
+                sed -i "$ALG_OBJ_S a $ALGNAME:\n\tcd $i; make; cd ..\n" Makefile
                 sed -i "$ALG_OBJ_S a LIBS += $i/lib$ALGNAME.a\nLIBSFLAGS += -l$ALGNAME\n$i/lib$ALGNAME.a:\n\tcd $i; make; cd ..\n" Makefile
                 sed -i "$ALG_HEADER_S a #include \"$ALGNAME.h\"" ./include/io.h
                 sed -i "$ALG_INTERFACE_S a else if(!exe_$ALGNAME(seqs, alphasets, os, algo)) flag = true;" ./common/io.cpp

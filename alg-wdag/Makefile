@@ -8,4 +8,4 @@ libwdag.a: $(OBJS)
 	${CC} $(CPPFLAGS) -c -o $@ $<
 
 clean:
-	rm -f *.o
+	rm -f *.o *.a
