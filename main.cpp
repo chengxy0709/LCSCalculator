@@ -35,7 +35,11 @@ int main(int argc, char* argv[]){
 	MLCSIO mlcs;
 	vector<string> seqs{"ACTAGTGC", "TGCTAGCA", "CATGCGAT"};
 
-	cout << "LCS Calculator\n";
+	cout << "**********************************\n";
+	cout << "*                                *\n";
+	cout << "*        LCS   Calculator        *\n";
+	cout << "*                                *\n";
+	cout << "**********************************\n";
 	getargs(argc, argv, args);
 	if(args.inputfile.length() == 0){
 		mlcs = MLCSIO(seqs);

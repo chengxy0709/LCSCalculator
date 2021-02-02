@@ -6,7 +6,6 @@
 #include <queue>
 #include <list>
 #include <time.h>
-#include <set>
 
 #include "point.h"
 #include "phash.h"
@@ -17,17 +16,6 @@
 #define HASMLCSSYM "HASMLCS"
 
 using namespace std;
-
-struct HASAttr{
-	int f;
-	int g;
-    double k; // k-norm
-    double EX; // expected length
-	Point<CordType>* parent;
-	HASAttr() : f(0),g(0),k(0),EX(0),parent(NULL){}
-	HASAttr(int f, int g, double k, double EX, Point<CordType>* parent = NULL) 
-        : f(f),g(g),k(k),EX(EX),parent(parent){}
-};
 
 
 // priority definition
@@ -46,6 +34,18 @@ struct priority3{
     bool operator () (const Point<CordType>* p1, const Point<CordType>* p2) const{
         return comp(p1, p2);
     }
+};
+
+struct HASAttr{
+	int f;
+	int g;
+    double k; // k-norm
+    double EX; // expected length
+	Point<CordType>* parent;
+	int flag;
+	HASAttr() : f(0),g(0),k(0),EX(0),parent(NULL),flag(0){}
+	HASAttr(int f, int g, double k, double EX, Point<CordType>* parent = NULL) 
+        : f(f),g(g),k(k),EX(EX),parent(parent),flag(0){}
 };
 
 class HASMLCS{
@@ -68,7 +68,25 @@ private:
 	vector< Point<CordType>* > Reduce(HashSet& Vext, vector< Point<CordType>* >& Ref, int beta);
 	int getLCS( Point<CordType>* p );
 
-	vector< Point<CordType>* > ExpandNode(Point<CordType>* p, set<Point<CordType>*, priority3>& Q);
+	Point<CordType>* pop_valid(priority_queue<Point<CordType>*, vector<Point<CordType>*>, priority1>& Q){
+		Point<CordType> *p = NULL;
+		while(Q.size() > 0) {
+			p = Q.top();
+			Q.pop();
+			if(ATTR(HASAttr, p)->flag == 0) break;
+		} 
+		return (ATTR(HASAttr, p)->flag == 0) ? p : NULL;
+	}
+	int Qmax(priority_queue<Point<CordType>*, vector<Point<CordType>*>, priority1>& Q){
+        Point<CordType> *p = NULL;
+		while(Q.size() > 0) {
+			p = Q.top();
+			if(ATTR(HASAttr, p)->flag == 0) break;
+			Q.pop();
+		}
+		return (ATTR(HASAttr, p)->flag == 0) ? ATTR(HASAttr, p)->f : 0;
+	}
+	vector< Point<CordType>* > ExpandNode(Point<CordType>* p, priority_queue<Point<CordType>*, vector<Point<CordType>*>, priority1>& Q);
 
 	vector<string> seqs;
 	vector< vector< vector<int> > > SucTabs;

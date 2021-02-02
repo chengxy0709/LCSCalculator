@@ -1,11 +1,11 @@
 #include "hasmlcs.h"
 
 // let k to be 2 (It is 0.5 in article, but it is doubted for me to this value.)
-#define KNORM 2
+#define KNORM 0.5
 double HASMLCS::cal_k_norm(const Point<CordType>* p){
     double res = 0;
     for(int i = 0; i < SucTabs.size(); i++){
-        res += pow(seqs[i].length() - p->cord[i], KNORM);
+        res += pow(seqs[i].length() - p->cord[i] + 1, KNORM);
     }
     return pow(res, 1.0 / KNORM);
 }
@@ -37,10 +37,10 @@ bool priority1::comp(const Point<CordType>* p1, const Point<CordType>* p2) const
              return false;
         }
         else{ // using the second method, k(v)
-            //return ATTR(HASAttr, p1)->k < ATTR(HASAttr, p2)->k;
-            if(ATTR(HASAttr, p1)->k < ATTR(HASAttr, p2)->k) return true;
-            else if(ATTR(HASAttr, p1)->k > ATTR(HASAttr, p2)->k) return false; 
-            else return porder(p1, p2);
+            return ATTR(HASAttr, p1)->k < ATTR(HASAttr, p2)->k;
+            //if(ATTR(HASAttr, p1)->k < ATTR(HASAttr, p2)->k) return true;
+            //else if(ATTR(HASAttr, p1)->k > ATTR(HASAttr, p2)->k) return false; 
+            //else return porder(p1, p2);
         }
     }
     else{
@@ -62,10 +62,10 @@ bool priority3::comp(const Point<CordType>* p1, const Point<CordType>* p2) const
              return false;
         }
         else{ // using the second method, k(v)
-            //return ATTR(HASAttr, p1)->k < ATTR(HASAttr, p2)->k;
-            if(ATTR(HASAttr, p1)->k > ATTR(HASAttr, p2)->k) return true;
-            else if(ATTR(HASAttr, p1)->k < ATTR(HASAttr, p2)->k) return false; 
-            else return porder(p1, p2);
+            return ATTR(HASAttr, p1)->k > ATTR(HASAttr, p2)->k;
+            //if(ATTR(HASAttr, p1)->k > ATTR(HASAttr, p2)->k) return true;
+            //else if(ATTR(HASAttr, p1)->k < ATTR(HASAttr, p2)->k) return false; 
+            //else return porder(p1, p2);
         }
     }
     else{

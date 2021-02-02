@@ -1,8 +1,10 @@
 #include "hasmlcs.h"
 
 static int maxlevel = 0;
-static int maxval = 0; // the max value f of a point in Q
 static bool opt = false;
+static int cnt = 0;
+static clock_t MAXTIME = 60 * 1000 * 1000;
+static int optimal_len = INT32_MAX;
 
 HASMLCS::HASMLCS(vector<string>& seqs, string& alphabets, int beta, int delta, int K){
 	
@@ -23,32 +25,38 @@ HASMLCS::HASMLCS(vector<string>& seqs, string& alphabets, int beta, int delta, i
 
 void HASMLCS::run(){
 
-    set< Point<CordType>*,  priority3 > Q;
+    priority_queue<Point<CordType>*, vector<Point<CordType>*>, priority1> Q;
     Point<CordType>* p0 = new Point<CordType>(seqs.size(), false, 0); 
+    int loop = 0;
 
     maxlevel = 0;
-    maxval = 0;
     opt = false;
     PSETATTR(p0, new HASAttr(UB(p0), 0, 0, 0));
-    Q.insert(p0);
+    Q.push(p0);
     pset.insert(p0);
-    while(Q.size() > 0 && !opt /* not time limit and not memory limit */){
+    while(Q.size() > 0 && !opt && MAXTIME > clock() /* not memory limit */){
 
+        loop++;
         // init beam data
         vector< Point<CordType>* > B;
-        auto endp = Q.begin();
 
-        maxval = ATTR(HASAttr, (*Q.begin()))->f;
-        for(int i = 0; i < beta && i < Q.size(); i++) endp++;
-        B.insert(B.end(), Q.begin(), endp);
-        Q.erase(Q.begin(), endp);
+        for(int i = 0; i < beta && i < Q.size(); i++){
+            Point<CordType> *p = pop_valid(Q);
+            if(p){
+                ATTR(HASAttr, p)->flag = -1;
+                B.push_back(p);
+            }
+            else break;
+        }
         
 
         // Beam Search
-        while(!opt && B.size() > 0){
+        while(!opt && B.size() > 0 && MAXTIME > clock()){
             HashSet Vext; 
             for(int i = 0; i < B.size(); i++){
-                vector< Point<CordType>* > temp = ExpandNode(B[i], Q);
+                vector< Point<CordType>* > temp;
+                ATTR( HASAttr, B[i] )->flag = -1;
+                temp = ExpandNode(B[i], Q);
                 // ExpandNode and Store children in Vext
                 Vext.insert(temp.begin(), temp.end());
             }
@@ -76,22 +84,21 @@ void HASMLCS::run(){
 
         // A* Search
         int iter = 0;
-        while(!opt && iter < delta /* not time limit and not memory limit */){
-            Point<CordType> *point = *(Q.begin());
-            Q.erase(Q.begin());
-            ExpandNode(point, Q);
+        while(!opt && iter < delta && MAXTIME > clock() /*not memory limit */){
+            Point<CordType> *point = pop_valid(Q);
+            if(point){
+                ATTR(HASAttr, point)->flag = -1;
+                ExpandNode(point, Q);
+            }
             iter++;
-        }
-        /*for(auto p : Q){
-            p->print(seqs.size(), '\t');
-            cout << "f:" << ATTR(HASAttr, p)->f << "g:" << ATTR(HASAttr, p)->g << "h:" << ATTR(HASAttr, p)->f - ATTR(HASAttr, p)->g << "k:" << ATTR(HASAttr, p)->k  << "\n";
-        }
-        cout << "===Q\n";*/
+        } 
 
     }
     
     cout << "The remain number of points in Q : " << Q.size() << endl;
     cout << "The number of points in set : " << pset.size() << endl;
+    cout << "The number of expanding : " << cnt << endl;
+    cout << "The number of loop : " << loop << endl;
 }
 
 vector< Point<CordType>* > HASMLCS::Filter(HashSet& Vext, int Kfilter){
@@ -139,12 +146,13 @@ vector< Point<CordType>* > HASMLCS::Reduce(HashSet& Vext, vector< Point<CordType
 
 }
 
-vector< Point<CordType>* > HASMLCS::ExpandNode(Point<CordType>* p, set<Point<CordType>*,  priority3>& Q){
+vector< Point<CordType>* > HASMLCS::ExpandNode(Point<CordType>* p, priority_queue<Point<CordType>*, vector<Point<CordType>*>, priority1>& Q){
 
     vector< Point<CordType>* > Vext;
     bool hasSuccessor = false;
     int l = ATTR(HASAttr, p)->g; // the level of p
 
+    cnt++;
     for(int i = 0; i < SucTabs[0].size(); i++){
         Point<CordType>* suc = successor(p, SucTabs, i);
         if(suc){
@@ -153,18 +161,18 @@ vector< Point<CordType>* > HASMLCS::ExpandNode(Point<CordType>* p, set<Point<Cor
             if(res.second){ // new point
                 int ub = UB(suc);
                 PSETATTR(suc, (new HASAttr(ub + l + 1, l + 1, cal_k_norm(suc), 0, p)));
-                Q.insert(suc);
+                Q.push(suc); 
                 Vext.push_back(suc);
             }
             else{ // update point
-                Point<CordType>* ep = *(res.first);
+                Point<CordType>* ep = *res.first;
                 if(ATTR(HASAttr, ep)->g < l + 1){ // a better solution            
-                    Q.erase(ep);
                     ATTR(HASAttr, ep)->f += l + 1 - ATTR(HASAttr, ep)->g;
                     ATTR(HASAttr, ep)->g = l + 1;
                     ATTR(HASAttr, ep)->parent = p;
                     // Actually, here should update this point's position in Q.
-                    Q.insert(ep);
+                    Q.push(ep); 
+                    ATTR(HASAttr, ep)->flag = 0; // let this point valid
                 }
                 Vext.push_back(ep);
 
@@ -181,9 +189,10 @@ vector< Point<CordType>* > HASMLCS::ExpandNode(Point<CordType>* p, set<Point<Cor
         }
     }
 
-    if(Q.size() <= 0 || maxlevel >= ATTR(HASAttr, (*(Q.begin())))->f){
+    if(Q.size() <= 0 || maxlevel >= Qmax(Q)){
         opt = true;
     }
+    if(maxlevel >= optimal_len) opt = true;
     
     return Vext;
 
@@ -217,6 +226,14 @@ int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& al
 		cin >> delta;
 		cout << "The const value Kfilter(negative value respresents default value) > ";
 		cin >> k;
+
+        cout << "The limit time (seconds) > ";
+		cin >> MAXTIME;
+        if(MAXTIME <= 0) MAXTIME = 60;
+        MAXTIME *= 1000 * 1000;
+		cout << "The best solution's length (set -1 for disabling this condition)> ";
+		cin >> optimal_len;
+        if(optimal_len < 0) optimal_len = INT32_MAX; 
 		
         g_point_size = seqs.size();
 		HASMLCS hasmlcs(seqs, alphasets, beta, delta, k);
@@ -224,6 +241,7 @@ int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& al
 		clock_t start_t, end_t;
 		
 		start_t = clock();
+        MAXTIME += start_t;
 		hasmlcs.run();
 		end_t = clock();
 		lcs = hasmlcs.LCS();
