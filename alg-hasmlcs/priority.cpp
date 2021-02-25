@@ -73,26 +73,26 @@ bool priority3::comp(const Point<CordType>* p1, const Point<CordType>* p2) const
     }
 }
 
-const double Po[1][1] = {0};
 double HASMLCS::cal_ex_val(const Point<CordType>* p){
     double lmin = INT32_MAX;
     double res = 0;
+    double sigSize = SucTabs[0].size();
     for(int i = 0; i < SucTabs.size(); i++){
         if(lmin > seqs[i].length() - p->cord[i] + 1)
             lmin = seqs[i].length() - p->cord[i] + 1;
     }
     for(int i = 1; i <= lmin; i++){
-        double po = 1;
+        double pr = 1;
         for(int j = 0; j < seqs.size(); j++){
-            po *= Po[i - 1][seqs[j].length() - p->cord[j] + 1];
+            pr *= P[i][seqs[j].length() - p->cord[j] + 1];
         }
-        res += pow(1 - po, pow(seqs.size(), i));
+        res += pow(1 - pr, pow(sigSize, i));
     }
     return lmin - res;
 }
 
 bool priority2::comp(const Point<CordType>* p1, const Point<CordType>* p2) const{
-    if(ATTR(HASAttr, p1)->EX > ATTR(HASAttr, p2)->EX){
+    if(ATTR(HASAttr, p1)->EX < ATTR(HASAttr, p2)->EX){
         return true;
     }
     else{
