@@ -2,10 +2,10 @@
 
 TOP_MLCS::TOP_MLCS(vector<string>& seqs, string& alphabets){
 
-	unordered_map<char, int> cmap = build_alphabet_map(alphabets);
-	phash_init(seqs.size());
-	SucTabs = cal_suc_tabs(seqs, cmap);
-	this->seqs = seqs;
+    unordered_map<char, int> cmap = build_alphabet_map(alphabets);
+    phash_init(seqs.size());
+    SucTabs = cal_suc_tabs(seqs, cmap);
+    this->seqs = seqs;
 
 }
 
@@ -14,7 +14,7 @@ int TOP_MLCS::construct_ICSG(){
     Point<CordType> *p0 = new Point<CordType>(SucTabs.size(), false, 0);
     queue< Point<CordType>* > Q;
     int index = 0;
-	
+    
     Q.push(p0);
     DM.insert(p0);
     ID.push_back(0);
@@ -31,7 +31,7 @@ int TOP_MLCS::construct_ICSG(){
                 else{
                     int index_t = DM.at(suc);
                     ID[index_t] = ID[index_t] + 1;
-					delete suc;
+                    delete suc;
                 }
             }
         }
@@ -58,9 +58,9 @@ int TOP_MLCS::ForwardTopSort(int maxIndex){
         vector<int> Dt;
         for(auto index : D){
             bool hasSuccessor = false;
-			Point<CordType> *p = DM.at(index);
-			for(int i = 0; i < SucTabs[0].size(); ++i){
-				Point<CordType> *suc = successor(p, SucTabs, i);
+            Point<CordType> *p = DM.at(index);
+            for(int i = 0; i < SucTabs[0].size(); ++i){
+                Point<CordType> *suc = successor(p, SucTabs, i);
                 if(suc){
                     int index_t = DM.at(suc);
                     hasSuccessor = true;
@@ -72,7 +72,7 @@ int TOP_MLCS::ForwardTopSort(int maxIndex){
                     if(ID[index_t] == 0){
                         Dt.push_back(index_t);
                     }
-					delete suc;
+                    delete suc;
                 }
             }
             if(!hasSuccessor){
@@ -115,21 +115,21 @@ void TOP_MLCS::BackwardTopSort(int maxlevel, int pinf_index){
 }
 
 void TOP_MLCS::run(){
-	
-	int maxIndex, maxlevel;
-	string LCSRecord;
-	
-	maxIndex = construct_ICSG();
+    
+    int maxIndex, maxlevel;
+    string LCSRecord;
+    
+    maxIndex = construct_ICSG();
     cout << "The number of points Generated is " << maxIndex << " ." << endl;
     maxlevel = ForwardTopSort(maxIndex);
     cout << "The maximal level of points is " << maxlevel << " ." << endl;
     BackwardTopSort(maxlevel, maxIndex - 1);
-	cout << "Generating MLCS..." << endl;
-	GetMLCS(LCSRecord, maxIndex - 1);
-	for(string& lcs : mlcs){
+    cout << "Generating MLCS..." << endl;
+    GetMLCS(LCSRecord, maxIndex - 1);
+    for(string& lcs : mlcs){
         reverse(lcs.begin(), lcs.end());
     }
-	
+    
 }
 
 void TOP_MLCS::GetMLCS(string& LCSRecord, int index){
@@ -149,8 +149,8 @@ void TOP_MLCS::GetMLCS(string& LCSRecord, int index){
 }
 
 TOP_MLCS::~TOP_MLCS(){
-	
-	
+    
+    
 }
 
 int exe_topmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){

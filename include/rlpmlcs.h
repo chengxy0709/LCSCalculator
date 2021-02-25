@@ -18,27 +18,27 @@
 
 class RLP_MLCS{
 
-public:	
-	RLP_MLCS(vector<string>& seqs, string& alphabets);
-	~RLP_MLCS();
-	
-	void run();
-	vector<string> MLCS() const {return mlcs;}
+public:    
+    RLP_MLCS(vector<string>& seqs, string& alphabets);
+    ~RLP_MLCS();
+    
+    void run();
+    vector<string> MLCS() const {return mlcs;}
 
 private:
     int cal_opt_point();
-	int construct_ICSG(Point<CordType> *p0);
-	int ForwardTopSort(int maxIndex, int startpoint, int curlevel);
-	void BackwardTopSort(int maxlevel, int pinf_index);
+    int construct_ICSG(Point<CordType> *p0);
+    int ForwardTopSort(int maxIndex, int startpoint, int curlevel);
+    void BackwardTopSort(int maxlevel, int pinf_index);
     void construct_SubICSG(int startpoint, int curlevel);
-	void GetMLCS(string& LCSRecord, int index);
+    void GetMLCS(string& LCSRecord, int index);
 
-	vector<string> seqs;
-	vector<string> mlcs;
-	vector< vector< vector<int> > > SucTabs;
-	BiHashTable DM;
-	vector<int> ID;
-	vector<int> tlevel;
+    vector<string> seqs;
+    vector<string> mlcs;
+    vector< vector< vector<int> > > SucTabs;
+    BiHashTable DM;
+    vector<int> ID;
+    vector<int> tlevel;
     vector< list<int> > precursor;
     vector<bool> inLCSPath;
 

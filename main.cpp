@@ -11,10 +11,10 @@ using namespace std;
 
 struct Arguments
 {
-	string alg;
-	string outputfile;
-	string inputfile;
-	string alphabets;
+    string alg;
+    string outputfile;
+    string inputfile;
+    string alphabets;
 };
 
 
@@ -24,41 +24,41 @@ static void Usage(){
     cout << "-A <algorithm>    -----  select a algorithm <TOPMLCS|MLCSAPP|...>." << endl;
     cout << "-o <outputfile>   -----  specify a output file." << endl; 
     cout << "-i <inputfile>    -----  specify a input file." << endl;
-	cout << "\nusing some default options..." << endl;
+    cout << "\nusing some default options..." << endl;
 }
 
 void getargs(int argc, char* argv[], Arguments& args);
 
 int main(int argc, char* argv[]){
-	
-	Arguments args;
-	MLCSIO mlcs;
-	vector<string> seqs{"ACTAGTGC", "TGCTAGCA", "CATGCGAT"};
+    
+    Arguments args;
+    MLCSIO mlcs;
+    vector<string> seqs{"ACTAGTGC", "TGCTAGCA", "CATGCGAT"};
 
-	cout << "**********************************\n";
-	cout << "*                                *\n";
-	cout << "*        LCS   Calculator        *\n";
-	cout << "*                                *\n";
-	cout << "**********************************\n";
-	getargs(argc, argv, args);
-	if(args.inputfile.length() == 0){
-		mlcs = MLCSIO(seqs);
-	}
-	else
-	{
-		mlcs = MLCSIO(args.inputfile);
-	}
-	if(args.outputfile.length() == 0){
-		mlcs.output(cout, args.alg, args.alphabets);
-	}
-	else{
-		filebuf fb;
-		fb.open(args.outputfile, ios::out | ios::trunc);
-		ostream of(&fb);
-		mlcs.output(of, args.alg, args.alphabets);
-	}
+    cout << "**********************************\n";
+    cout << "*                                *\n";
+    cout << "*        LCS   Calculator        *\n";
+    cout << "*                                *\n";
+    cout << "**********************************\n";
+    getargs(argc, argv, args);
+    if(args.inputfile.length() == 0){
+        mlcs = MLCSIO(seqs);
+    }
+    else
+    {
+        mlcs = MLCSIO(args.inputfile);
+    }
+    if(args.outputfile.length() == 0){
+        mlcs.output(cout, args.alg, args.alphabets);
+    }
+    else{
+        filebuf fb;
+        fb.open(args.outputfile, ios::out | ios::trunc);
+        ostream of(&fb);
+        mlcs.output(of, args.alg, args.alphabets);
+    }
 
-	return 0;
+    return 0;
 
 }
 

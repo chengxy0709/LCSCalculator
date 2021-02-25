@@ -19,25 +19,25 @@
 
 class TOP_MLCS{
 
-public:	
-	TOP_MLCS(vector<string>& seqs, string& alphabets);
-	~TOP_MLCS();
-	
-	void run();
-	vector<string> MLCS() const {return mlcs;}
+public:    
+    TOP_MLCS(vector<string>& seqs, string& alphabets);
+    ~TOP_MLCS();
+    
+    void run();
+    vector<string> MLCS() const {return mlcs;}
 
 private:
-	int construct_ICSG();
-	int ForwardTopSort(int maxIndex);
-	void BackwardTopSort(int maxlevel, int pinf_index);
-	void GetMLCS(string& LCSRecord, int index);
+    int construct_ICSG();
+    int ForwardTopSort(int maxIndex);
+    void BackwardTopSort(int maxlevel, int pinf_index);
+    void GetMLCS(string& LCSRecord, int index);
 
-	vector<string> seqs;
-	vector<string> mlcs;
-	vector< vector< vector<int> > > SucTabs;
-	BiHashTable DM;
-	vector<int> ID;
-	vector<int> tlevel;
+    vector<string> seqs;
+    vector<string> mlcs;
+    vector< vector< vector<int> > > SucTabs;
+    BiHashTable DM;
+    vector<int> ID;
+    vector<int> tlevel;
     vector< list<int> > precursor;
 
 };

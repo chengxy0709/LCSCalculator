@@ -24,7 +24,7 @@ public:
         if(d > 0) this->d = d;
         else std::cerr << "d must be a integer!" << std::endl;
     }
-	~Dtree();
+    ~Dtree();
 
     void setD(int d){this->d = d;}
 
@@ -36,7 +36,7 @@ public:
 
 private:
     DtreeNode* createDtNode(Point<CordType> *p);
-	
+    
     int d;
     DtreeNode *root;
 

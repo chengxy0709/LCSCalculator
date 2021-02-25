@@ -4,10 +4,10 @@ QuickDP::QuickDP(vector<string> seqs, string alphabets)
  : seqs(seqs),alphaSize(alphabets.length())
 {
 
-	phash_init(seqs.size());
-	cmap = build_alphabet_map(alphabets);
-	SucTabs = cal_suc_tabs(seqs, cmap);
-	
+    phash_init(seqs.size());
+    cmap = build_alphabet_map(alphabets);
+    SucTabs = cal_suc_tabs(seqs, cmap);
+    
 }
 
 void QuickDP::run(){
@@ -74,7 +74,7 @@ void QuickDP::run(){
     Point<CordType> *curPoint = *D[k].begin();
     char c = seqs[0][curPoint->cord[0] - 1];
     lcs = "";
-	lcs += c;
+    lcs += c;
     while(k > 1){
         for(auto point : D[k - 1]){
             Point<CordType> *suc = successor(point, SucTabs, cmap[c]);
@@ -89,11 +89,11 @@ void QuickDP::run(){
         lcs = c + lcs;
         k--;
     }
-	
-	// free memory
-	for(auto s : D){
-		for(auto p : s) delete p;
-	}
+    
+    // free memory
+    for(auto s : D){
+        for(auto p : s) delete p;
+    }
 
 }
 
@@ -166,10 +166,10 @@ vector<Point<CordType>*> QuickDP::Divide(vector< Point<CordType>* >& points, int
     // merge
     // set label
     for(auto p : Ares){
-		SETATTRINT(p, 1);
+        SETATTRINT(p, 1);
     }
     for(auto p : Bres){
-		SETATTRINT(p, 0);
+        SETATTRINT(p, 0);
     }
     Ares = mergeSortedVecter(Ares, Bres, 0);
     // delete the point in Ares dominated by any point in Bres
@@ -265,17 +265,17 @@ vector<Point<CordType>*> QuickDP::Union(vector< Point<CordType>* >& points, int 
 int exe_quickdp(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
     if(algo == QUICKDPSYM){
         QuickDP quickdp(seqs, alphasets);
-		string lcs;
-		clock_t start_t, end_t;
-		
-		start_t = clock();
-		quickdp.run();
-		end_t = clock();
-		lcs = quickdp.LCS();
-		os << "Result(by " << algo << "):\n";
-		os << "time(us) : " << end_t - start_t << "\n";
-		os << "the length of lcs : " << lcs.length() << "\n";
-		os << "a lcs : " << lcs << "\n";
+        string lcs;
+        clock_t start_t, end_t;
+        
+        start_t = clock();
+        quickdp.run();
+        end_t = clock();
+        lcs = quickdp.LCS();
+        os << "Result(by " << algo << "):\n";
+        os << "time(us) : " << end_t - start_t << "\n";
+        os << "the length of lcs : " << lcs.length() << "\n";
+        os << "a lcs : " << lcs << "\n";
         return 0;
     }
     else{

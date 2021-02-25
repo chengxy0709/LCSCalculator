@@ -4,10 +4,10 @@ static vector<int> firstlayer;
 
 RLP_MLCS::RLP_MLCS(vector<string>& seqs, string& alphabets){
 
-	unordered_map<char, int> cmap = build_alphabet_map(alphabets);
-	phash_init(seqs.size());
-	SucTabs = cal_suc_tabs(seqs, cmap);
-	this->seqs = seqs;
+    unordered_map<char, int> cmap = build_alphabet_map(alphabets);
+    phash_init(seqs.size());
+    SucTabs = cal_suc_tabs(seqs, cmap);
+    this->seqs = seqs;
 
 }
 
@@ -41,7 +41,7 @@ int RLP_MLCS::construct_ICSG(Point<CordType> *p0){
 
     queue< Point<CordType>* > Q;
     int index = 0;
-	
+    
     Q.push(p0);
     if(ID.size() < DM.size()) ID.resize(DM.size(), 0);
 
@@ -57,7 +57,7 @@ int RLP_MLCS::construct_ICSG(Point<CordType> *p0){
                 else{
                     int index_t = DM.at(suc);
                     ID[index_t] = ID[index_t] + 1;
-					delete suc;
+                    delete suc;
                 }
             }
         }
@@ -89,9 +89,9 @@ int RLP_MLCS::ForwardTopSort(int maxIndex, int startpoint, int curlevel){
         vector<int> Dt;
         for(auto index : D){
             bool hasSuccessor = false;
-			Point<CordType> *p = DM.at(index);
-			for(int i = 0; i < SucTabs[0].size(); ++i){
-				Point<CordType> *suc = successor(p, SucTabs, i);
+            Point<CordType> *p = DM.at(index);
+            for(int i = 0; i < SucTabs[0].size(); ++i){
+                Point<CordType> *suc = successor(p, SucTabs, i);
                 if(suc){
                     int index_t = DM.at(suc);
                     hasSuccessor = true;
@@ -103,7 +103,7 @@ int RLP_MLCS::ForwardTopSort(int maxIndex, int startpoint, int curlevel){
                     if(ID[index_t] == 0){
                         Dt.push_back(index_t);
                     }
-					delete suc;
+                    delete suc;
                 }
             }
             if(!hasSuccessor){
@@ -188,17 +188,17 @@ void RLP_MLCS::construct_SubICSG(int startpoint, int curlevel){
 }
 
 void RLP_MLCS::run(){
-	
-	int maxIndex, maxlevel, optpind;
-	string LCSRecord;
-	
+    
+    int maxIndex, maxlevel, optpind;
+    string LCSRecord;
+    
     optpind = cal_opt_point(); // optimized point's index in firstlayer
     maxIndex = construct_ICSG(DM.at(firstlayer[optpind]));
     cout << "The number of points Generated is " << maxIndex << " ." << endl;
     maxlevel = ForwardTopSort(maxIndex ,firstlayer[optpind] , 1);
     cout << "The maximal level of points is " << maxlevel << " ." << endl;
     BackwardTopSort(maxlevel, maxIndex - 1);
-	cout << "Generating MLCS..." << endl;
+    cout << "Generating MLCS..." << endl;
     for(int i = 0; i < firstlayer.size(); i++){
         if(i == optpind) continue;
         construct_SubICSG(firstlayer[i], 1);
@@ -211,12 +211,12 @@ void RLP_MLCS::run(){
         for(auto ii : precursor[i]) cout << ii << ',';
         cout << endl;
     }*/
-	
-	GetMLCS(LCSRecord, maxIndex - 1);
-	for(string& lcs : mlcs){
+    
+    GetMLCS(LCSRecord, maxIndex - 1);
+    for(string& lcs : mlcs){
         reverse(lcs.begin(), lcs.end());
     }
-	
+    
 }
 
 void RLP_MLCS::GetMLCS(string& LCSRecord, int index){
@@ -236,27 +236,27 @@ void RLP_MLCS::GetMLCS(string& LCSRecord, int index){
 }
 
 RLP_MLCS::~RLP_MLCS(){
-	
-	
+    
+    
 }
 
 int exe_rlpmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
     if(algo == RLPMLCSSYM){
         RLP_MLCS rlpmlcs(seqs, alphasets);
-		vector<string> mlcs;
-		clock_t start_t, end_t;
-		
-		start_t = clock();
-		rlpmlcs.run();
-		end_t = clock();
-		mlcs = rlpmlcs.MLCS();
-		os << "Result(by " << algo << "):\n";
-		os << "time(us) : " << end_t - start_t << "\n";
-		os << "the length of lcs : " << mlcs[0].length() << "\n";
-		os << "all lcs : \n";
-		for(int i = 0; i < mlcs.size(); i++){
-			os << i << " : " << mlcs[i] << "\n";
-		}
+        vector<string> mlcs;
+        clock_t start_t, end_t;
+        
+        start_t = clock();
+        rlpmlcs.run();
+        end_t = clock();
+        mlcs = rlpmlcs.MLCS();
+        os << "Result(by " << algo << "):\n";
+        os << "time(us) : " << end_t - start_t << "\n";
+        os << "the length of lcs : " << mlcs[0].length() << "\n";
+        os << "all lcs : \n";
+        for(int i = 0; i < mlcs.size(); i++){
+            os << i << " : " << mlcs[i] << "\n";
+        }
         return 0;
     }
     else{

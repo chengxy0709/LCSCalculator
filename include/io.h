@@ -20,19 +20,19 @@
 using namespace std;
 
 class MLCSIO{
-	
+    
 public:
-	MLCSIO(){}
-	MLCSIO(vector<string>& seqs):seqs(seqs){}
-	MLCSIO(string filename);
-	~MLCSIO(){}
-	
-	vector<string> getSeqs() const {return seqs;}
-	void output(ostream& os, string algo, string alphasets);
-	
+    MLCSIO(){}
+    MLCSIO(vector<string>& seqs):seqs(seqs){}
+    MLCSIO(string filename);
+    ~MLCSIO(){}
+    
+    vector<string> getSeqs() const {return seqs;}
+    void output(ostream& os, string algo, string alphasets);
+    
 private:
-	vector<string> seqs;
-	string filename;
+    vector<string> seqs;
+    string filename;
 
 };
 

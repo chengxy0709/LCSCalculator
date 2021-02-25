@@ -35,9 +35,9 @@ DtreeNode* Dtree::createDtNode(Point<CordType> *p){
     DtreeNode *node = new DtreeNode;
     node->D = p;
     node->A = new Point<CordType>(d, false, 0);
-	for(int i = 0; i < d; i++){
-		node->A->cord[i] = p->cord[i];
-	}
+    for(int i = 0; i < d; i++){
+        node->A->cord[i] = p->cord[i];
+    }
     node->child = new DtreeNode* [d];
     for(int i = 0; i < d; ++i){
         node->child[i] = NULL;
@@ -78,9 +78,9 @@ void Dtree::traverse(DtreeNode *R){
 
     if(R == NULL)
         return;
-	
-	R->A->print(d, '|');
-	R->D->print(d);
+    
+    R->A->print(d, '|');
+    R->D->print(d);
 
     for(int i = 0; i < d; ++i){
         traverse(R->child[i]);
@@ -89,16 +89,16 @@ void Dtree::traverse(DtreeNode *R){
 }
 
 Dtree::~Dtree(){
-	
-	if(root == NULL)
+    
+    if(root == NULL)
         return;
-	
-	delete root->A;
-	delete root->D;
+    
+    delete root->A;
+    delete root->D;
 
     for(int i = 0; i < d; ++i){
         delete root->child[i];
     }
-	delete root->child;
-	
+    delete root->child;
+    
 }

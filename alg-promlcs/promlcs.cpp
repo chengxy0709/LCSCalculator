@@ -10,12 +10,12 @@ class Layer{
 
 public:
     Layer(int d){dtree.setD(d);order = 0;}
-	~Layer(){
-		while(!priq.empty()){
-			delete priq.top();
-			priq.pop();
-		}
-	}
+    ~Layer(){
+        while(!priq.empty()){
+            delete priq.top();
+            priq.pop();
+        }
+    }
 
     void setOrder(int ord){order = ord;}
     int getOrder() const {return order;}
@@ -49,28 +49,28 @@ PRO_MLCS::PRO_MLCS(vector<string> seqs, string alphabets, int scnum)
  : seqs(seqs),alphaSize(alphabets.length())
 {
 
-	unordered_map<char, int> cmap = build_alphabet_map(alphabets);
-	if(scnum > 0) this->scnum = scnum;
-	else scnum = 100;
-	SucTabs = cal_suc_tabs(seqs, cmap);
-	calSU(cmap);
-	
+    unordered_map<char, int> cmap = build_alphabet_map(alphabets);
+    if(scnum > 0) this->scnum = scnum;
+    else scnum = 100;
+    SucTabs = cal_suc_tabs(seqs, cmap);
+    calSU(cmap);
+    
 }
 
 void PRO_MLCS::calSU(unordered_map<char, int>& cmap){
 
-	for(int i = 0; i < seqs.size(); i++){
-		int len = seqs[i].length();
-		SU.push_back(vector< vector<int> >(alphaSize, vector<int>(len + 1, 0)));
-		// calculate SU[i]
-		for (int j = len - 1; j >= 0; j--) {
-			for (int k = 0; k < alphaSize; k++) {
-				SU[i][k][j] = SU[i][k][j + 1];
-			}
-			SU[i][cmap[seqs[i][j]]][j]++;
-		}
-	}
-	
+    for(int i = 0; i < seqs.size(); i++){
+        int len = seqs[i].length();
+        SU.push_back(vector< vector<int> >(alphaSize, vector<int>(len + 1, 0)));
+        // calculate SU[i]
+        for (int j = len - 1; j >= 0; j--) {
+            for (int k = 0; k < alphaSize; k++) {
+                SU[i][k][j] = SU[i][k][j + 1];
+            }
+            SU[i][cmap[seqs[i][j]]][j]++;
+        }
+    }
+    
 }
 
 int PRO_MLCS::calg(Point<CordType> *p, int order){
@@ -100,18 +100,18 @@ int PRO_MLCS::caldist(Point<CordType> *p){
 }
 
 void PRO_MLCS::run(){
-	
-	list<Layer*> layers;
-	list<Layer*>::iterator lbeginIter;
-	list<Layer*>::iterator lendIter;
-	list<Layer*>::iterator curIter;
+    
+    list<Layer*> layers;
+    list<Layer*>::iterator lbeginIter;
+    list<Layer*>::iterator lendIter;
+    list<Layer*>::iterator curIter;
 
-	int Lapp = 0;
+    int Lapp = 0;
 
-	Point<CordType> *p = new Point<CordType>(seqs.size(), false, 0);
+    Point<CordType> *p = new Point<CordType>(seqs.size(), false, 0);
     Layer *layer = new Layer(seqs.size());
 
-	SETATTRINT(p, 0);
+    SETATTRINT(p, 0);
     layer->addpriq(p);
 
     layers.push_back(layer);
@@ -171,34 +171,34 @@ void PRO_MLCS::run(){
 //        cout << "end: " << (*lendIter)->getOrder() << endl;
     }
 
-	cout << "The length of LCS is " << Lapp << " ." << endl;
-	
-	// free memory
-	for(auto& l : layers){
-		delete l;
-	}
-	
+    cout << "The length of LCS is " << Lapp << " ." << endl;
+    
+    // free memory
+    for(auto& l : layers){
+        delete l;
+    }
+    
 }
 
 int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
     if(algo == PROMLCSSYM){
         /* else argument*/
-		int scnum;
-		cout << "The number of calculating point in a single iteration(negative value respresents default value) > ";
-		cin >> scnum;
-		
-		PRO_MLCS promlcs(seqs, alphasets, scnum);
-		string lcs;
-		clock_t start_t, end_t;
-		
-		start_t = clock();
-		promlcs.run();
-		end_t = clock();
-		lcs = promlcs.LCS();
-		os << "Result(by " << algo << "):\n";
-		os << "time(us) : " << end_t - start_t << "\n";
-		os << "the length of lcs : " << lcs.length() << "\n";
-		os << "a lcs : " << lcs << "\n";
+        int scnum;
+        cout << "The number of calculating point in a single iteration(negative value respresents default value) > ";
+        cin >> scnum;
+        
+        PRO_MLCS promlcs(seqs, alphasets, scnum);
+        string lcs;
+        clock_t start_t, end_t;
+        
+        start_t = clock();
+        promlcs.run();
+        end_t = clock();
+        lcs = promlcs.LCS();
+        os << "Result(by " << algo << "):\n";
+        os << "time(us) : " << end_t - start_t << "\n";
+        os << "the length of lcs : " << lcs.length() << "\n";
+        os << "a lcs : " << lcs << "\n";
         return 0;
     }
     else{

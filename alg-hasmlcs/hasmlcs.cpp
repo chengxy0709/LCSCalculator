@@ -7,24 +7,24 @@ static clock_t MAXTIME = 60 * 1000 * 1000;
 static int optimal_len = INT32_MAX;
 
 HASMLCS::HASMLCS(vector<string>& seqs, string& alphabets, int beta, int delta, int K){
-	
-	unordered_map<char, int> cmap = build_alphabet_map(alphabets);
-	phash_init(seqs.size(), 1000000);
-	this->seqs = seqs;
-	if(beta >= 0) this->beta = beta;
-	else this->beta = 1;
-	if(delta >= 0) this->delta = delta;
-	else this->delta = 1;
+    
+    unordered_map<char, int> cmap = build_alphabet_map(alphabets);
+    phash_init(seqs.size(), 1000000);
+    this->seqs = seqs;
+    if(beta >= 0) this->beta = beta;
+    else this->beta = 1;
+    if(delta >= 0) this->delta = delta;
+    else this->delta = 1;
     if(K >= 0) Kfilter = K;
-	else Kfilter = 0;
-	SucTabs = cal_suc_tabs(seqs, cmap);
-	ScoreTabs = cal_score_tabs(seqs);
+    else Kfilter = 0;
+    SucTabs = cal_suc_tabs(seqs, cmap);
+    ScoreTabs = cal_score_tabs(seqs);
     CountTabs = cal_count_tabs(seqs, cmap, false);
 
     int n = 0;
     for(int i = 0; i < seqs.size(); i++) if(seqs[i].length() > n) n = seqs[i].length();
     P = cal_pr_val(n, n, cmap.size());
-	
+    
 }
 
 void HASMLCS::run_for_BS(){
@@ -346,11 +346,11 @@ int HASMLCS::UB(Point<CordType>* p){
 
 int HASMLCS::getLCS( Point<CordType>* p ){
     lcs.clear();
-	while(p->cord[0] != 0){
-		lcs = seqs[0][p->cord[0] - 1] + lcs;
-		p = ATTR(HASAttr, p)->parent;
-	}
-	return lcs.length();
+    while(p->cord[0] != 0){
+        lcs = seqs[0][p->cord[0] - 1] + lcs;
+        p = ATTR(HASAttr, p)->parent;
+    }
+    return lcs.length();
 }
 
 vector< vector<double> > HASMLCS::cal_pr_val(int p, int q, int sigSize){
@@ -369,40 +369,40 @@ vector< vector<double> > HASMLCS::cal_pr_val(int p, int q, int sigSize){
 
 int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
     if(algo == HASMLCSSYM){
-		/* else argument*/
-		int beta, delta, k;
-		cout << "The const value beta(negative value respresents default value) > ";
-		cin >> beta;
-		cout << "The const value delta(negative value respresents default value) > ";
-		cin >> delta;
-		cout << "The const value Kfilter(negative value respresents default value) > ";
-		cin >> k;
+        /* else argument*/
+        int beta, delta, k;
+        cout << "The const value beta(negative value respresents default value) > ";
+        cin >> beta;
+        cout << "The const value delta(negative value respresents default value) > ";
+        cin >> delta;
+        cout << "The const value Kfilter(negative value respresents default value) > ";
+        cin >> k;
 
         cout << "The limit time (seconds) > ";
-		cin >> MAXTIME;
+        cin >> MAXTIME;
         if(MAXTIME <= 0) MAXTIME = 60;
         MAXTIME *= 1000 * 1000;
-		cout << "The best solution's length (set -1 for disabling this condition)> ";
-		cin >> optimal_len;
+        cout << "The best solution's length (set -1 for disabling this condition)> ";
+        cin >> optimal_len;
         if(optimal_len < 0) optimal_len = INT32_MAX; 
-		
+        
         g_point_size = seqs.size();
-		HASMLCS hasmlcs(seqs, alphasets, beta, delta, k);
-		string lcs;
-		clock_t start_t, end_t;
-		
-		start_t = clock();
+        HASMLCS hasmlcs(seqs, alphasets, beta, delta, k);
+        string lcs;
+        clock_t start_t, end_t;
+        
+        start_t = clock();
         MAXTIME += start_t;
-		hasmlcs.run_for_ACS();
-		end_t = clock();
-		lcs = hasmlcs.LCS();
-		os << "Result(by " << algo << "):\n";
-		os << "time(us) : " << end_t - start_t << "\n";
-		os << "the length of lcs : " << lcs.length() << "\n";
-		os << "a lcs : " << lcs << "\n";
-		return 0;
-	}
-	else{
-		return -1;
-	}
+        hasmlcs.run_for_ACS();
+        end_t = clock();
+        lcs = hasmlcs.LCS();
+        os << "Result(by " << algo << "):\n";
+        os << "time(us) : " << end_t - start_t << "\n";
+        os << "the length of lcs : " << lcs.length() << "\n";
+        os << "a lcs : " << lcs << "\n";
+        return 0;
+    }
+    else{
+        return -1;
+    }
 }

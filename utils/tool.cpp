@@ -1,101 +1,101 @@
 #include "tool.h"
 
 unordered_map<char, int> build_alphabet_map(string& alphabets){
-	unordered_map<char, int> cmap;
-	for(int i = 0; i < alphabets.length(); i++){
-		cmap.insert(make_pair(alphabets[i], i));
-	}
-	return cmap;
+    unordered_map<char, int> cmap;
+    for(int i = 0; i < alphabets.length(); i++){
+        cmap.insert(make_pair(alphabets[i], i));
+    }
+    return cmap;
 }
 
 vector< vector<int> > cal_suc_tab(string& seq, unordered_map<char, int>& cmap, bool disp){
-	int len = seq.length();
-	vector< vector<int> > SucTab(cmap.size(), vector<int>(len + 1));
+    int len = seq.length();
+    vector< vector<int> > SucTab(cmap.size(), vector<int>(len + 1));
 
-	// calculate successor table
-	for (int i = 0; i < cmap.size(); i++) {
-		SucTab[i][len] = -1;
-	}
+    // calculate successor table
+    for (int i = 0; i < cmap.size(); i++) {
+        SucTab[i][len] = -1;
+    }
 
-	for (int j = len - 1; j >= 0; j--) {
-		for (int i = 0; i < cmap.size(); i++) {
-			SucTab[i][j] = SucTab[i][j + 1];
-		}
-		SucTab[cmap[seq[j]]][j] = j + 1;
-	}
+    for (int j = len - 1; j >= 0; j--) {
+        for (int i = 0; i < cmap.size(); i++) {
+            SucTab[i][j] = SucTab[i][j + 1];
+        }
+        SucTab[cmap[seq[j]]][j] = j + 1;
+    }
 
-	if(disp){
-		cout << "\n  | \t\t";
-		for(int i = 0; i < len; i++) cout << seq[i] << "\t";
-		cout << endl;
-		for(int i = 0; i < len + 2; i++) cout << "--" << "\t";
-		cout << endl;
-		for (auto m : cmap) {
-			cout << m.first << " | \t";
-			for (int j = 0; j <= len; j++) {
-				cout << SucTab[m.second][j] << "\t";
-			}
-			cout << endl;
-		}
-		cout << endl;
-	}
-	
-	return SucTab;
+    if(disp){
+        cout << "\n  | \t\t";
+        for(int i = 0; i < len; i++) cout << seq[i] << "\t";
+        cout << endl;
+        for(int i = 0; i < len + 2; i++) cout << "--" << "\t";
+        cout << endl;
+        for (auto m : cmap) {
+            cout << m.first << " | \t";
+            for (int j = 0; j <= len; j++) {
+                cout << SucTab[m.second][j] << "\t";
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+    
+    return SucTab;
 }
 
 vector< vector< vector<int> > > cal_suc_tabs(vector<string>& seqs, unordered_map<char, int>& cmap, bool disp){
-	
-	vector< vector< vector<int> > > SucTabs;
-	for(auto& seq : seqs){
-		SucTabs.push_back(cal_suc_tab(seq, cmap, disp));
-	}
-	return SucTabs;
-	
+    
+    vector< vector< vector<int> > > SucTabs;
+    for(auto& seq : seqs){
+        SucTabs.push_back(cal_suc_tab(seq, cmap, disp));
+    }
+    return SucTabs;
+    
 }
 
 vector< vector<int> > cal_count_tab(string& seq, unordered_map<char, int>& cmap, bool disp){
-	int len = seq.length();
-	vector< vector<int> > CountTab(cmap.size(), vector<int>(len + 1));
+    int len = seq.length();
+    vector< vector<int> > CountTab(cmap.size(), vector<int>(len + 1));
 
-	// calculate alpha count table
-	for (int i = 0; i < cmap.size(); i++) {
-		CountTab[i][len] = 0;
-	}
+    // calculate alpha count table
+    for (int i = 0; i < cmap.size(); i++) {
+        CountTab[i][len] = 0;
+    }
 
-	for (int j = len - 1; j >= 0; j--) {
-		for (int i = 0; i < cmap.size(); i++) {
-			CountTab[i][j] = CountTab[i][j + 1];
-		}
-		CountTab[cmap[seq[j]]][j]++;
-	}
+    for (int j = len - 1; j >= 0; j--) {
+        for (int i = 0; i < cmap.size(); i++) {
+            CountTab[i][j] = CountTab[i][j + 1];
+        }
+        CountTab[cmap[seq[j]]][j]++;
+    }
 
-	if(disp){
-		cout << "\n  | \t\t";
-		for(int i = 0; i < len; i++) cout << seq[i] << "\t";
-		cout << endl;
-		for(int i = 0; i < len + 2; i++) cout << "--" << "\t";
-		cout << endl;
-		for (auto m : cmap) {
-			cout << m.first << " | \t";
-			for (int j = 0; j <= len; j++) {
-				cout << CountTab[m.second][j] << "\t";
-			}
-			cout << endl;
-		}
-		cout << endl;
-	}
-	
-	return CountTab;
+    if(disp){
+        cout << "\n  | \t\t";
+        for(int i = 0; i < len; i++) cout << seq[i] << "\t";
+        cout << endl;
+        for(int i = 0; i < len + 2; i++) cout << "--" << "\t";
+        cout << endl;
+        for (auto m : cmap) {
+            cout << m.first << " | \t";
+            for (int j = 0; j <= len; j++) {
+                cout << CountTab[m.second][j] << "\t";
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+    
+    return CountTab;
 }
 
 vector< vector< vector<int> > > cal_count_tabs(vector<string>& seqs, unordered_map<char, int>& cmap, bool disp){
-	
-	vector< vector< vector<int> > > CountTabs;
-	for(auto& seq : seqs){
-		CountTabs.push_back(cal_count_tab(seq, cmap, disp));
-	}
-	return CountTabs;
-	
+    
+    vector< vector< vector<int> > > CountTabs;
+    for(auto& seq : seqs){
+        CountTabs.push_back(cal_count_tab(seq, cmap, disp));
+    }
+    return CountTabs;
+    
 }
 
 int UpperBound_by_CountTabs(Point<CordType> *p, vector< vector< vector<int> > >& CountTabs){
@@ -115,49 +115,49 @@ int UpperBound_by_CountTabs(Point<CordType> *p, vector< vector< vector<int> > >&
 }
 
 vector< vector< vector<int> > > cal_score_tabs(vector<string>& seqs){
-	
+    
     vector< vector< vector<int> > > ScoreTabs;
 
-	for (int i = 0; i < (seqs.size() + 1) / 2; i++) {
-		int i1 = i << 1;
-		int i2 = 1+ (i << 1);
-		if (i2 >= seqs.size()) i2 = 0;
+    for (int i = 0; i < (seqs.size() + 1) / 2; i++) {
+        int i1 = i << 1;
+        int i2 = 1+ (i << 1);
+        if (i2 >= seqs.size()) i2 = 0;
 
-		ScoreTabs.push_back(vector< vector<int> >(seqs[i1].length() + 1, vector<int>(seqs[i2].length() + 1, 0)));
-		for (int x = seqs[i1].length() - 1; x >= 0; x--) {
-			for (int y = seqs[i2].length() - 1; y >= 0; y--) {
-				if (seqs[i1][x] == seqs[i2][y])
-					ScoreTabs[i][x][y] = ScoreTabs[i][x + 1][y + 1] + 1;
-				else
-					ScoreTabs[i][x][y] = max(ScoreTabs[i][x+1][y], ScoreTabs[i][x][y+1]);
-			}
-		}
+        ScoreTabs.push_back(vector< vector<int> >(seqs[i1].length() + 1, vector<int>(seqs[i2].length() + 1, 0)));
+        for (int x = seqs[i1].length() - 1; x >= 0; x--) {
+            for (int y = seqs[i2].length() - 1; y >= 0; y--) {
+                if (seqs[i1][x] == seqs[i2][y])
+                    ScoreTabs[i][x][y] = ScoreTabs[i][x + 1][y + 1] + 1;
+                else
+                    ScoreTabs[i][x][y] = max(ScoreTabs[i][x+1][y], ScoreTabs[i][x][y+1]);
+            }
+        }
 
-	}
+    }
 
     return ScoreTabs;
-	
+    
 }
 
 int UpperBound_by_ScoreTabs(Point<CordType> *p, vector< vector< vector<int> > >& ScoreTabs){
 
-	int h = ScoreTabs[0][0][0];
-	for (int i = 0; i < ScoreTabs.size(); i++) {
-		int i1 = i << 1;
-		int i2 = 1+ (i << 1);
-		if (i2 >= ScoreTabs.size()) i2 = 0;
-		h = min(h, ScoreTabs[i][p->cord[i1]][p->cord[i2]]);
-	}
+    int h = ScoreTabs[0][0][0];
+    for (int i = 0; i < ScoreTabs.size(); i++) {
+        int i1 = i << 1;
+        int i2 = 1+ (i << 1);
+        if (i2 >= ScoreTabs.size()) i2 = 0;
+        h = min(h, ScoreTabs[i][p->cord[i1]][p->cord[i2]]);
+    }
 
-	return h;
-	
+    return h;
+    
 }
 
 Point<CordType>* successor(Point<CordType>* p, vector< vector< vector<int> > >& SucTabs, int i){
     Point<CordType>* q = new Point<CordType>(SucTabs.size());
 
     for(unsigned int j = 0; j < SucTabs.size(); ++j){
-		q->cord[j] = SucTabs[j][i][p->cord[j]];
+        q->cord[j] = SucTabs[j][i][p->cord[j]];
         if(q->cord[j] < 0){ // dominants do not exists.
             delete q;
             return NULL;
@@ -168,28 +168,28 @@ Point<CordType>* successor(Point<CordType>* p, vector< vector< vector<int> > >& 
 }
 
 bool is_successor(Point<CordType>* p, Point<CordType>* q, int num){
-	bool flag = false;
-	for(int i = 0; i < num; i++){
-		if(p->cord[i] != q->cord[i]){ 
-			flag = true;
-			if(p->cord[i] < q->cord[i]) return false;
-		}
-	}
-	return flag;
+    bool flag = false;
+    for(int i = 0; i < num; i++){
+        if(p->cord[i] != q->cord[i]){ 
+            flag = true;
+            if(p->cord[i] < q->cord[i]) return false;
+        }
+    }
+    return flag;
 }
 
 bool is_immediate_successor(Point<CordType>* p, Point<CordType>* q , vector< vector< vector<int> > >& SucTabs){
 
-	for(int i = 0; i < SucTabs[0].size(); i++){
-		Point<CordType> *suc = successor(q, SucTabs, i);
-		if(suc){
-			if(is_successor(p, suc, SucTabs.size())){
-				delete suc;
-				return false;
-			}
-			delete suc;
-		}
-	}
+    for(int i = 0; i < SucTabs[0].size(); i++){
+        Point<CordType> *suc = successor(q, SucTabs, i);
+        if(suc){
+            if(is_successor(p, suc, SucTabs.size())){
+                delete suc;
+                return false;
+            }
+            delete suc;
+        }
+    }
     return true;
 
 }
