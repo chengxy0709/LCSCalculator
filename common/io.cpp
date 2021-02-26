@@ -15,7 +15,7 @@ MLCSIO::MLCSIO(string filename) : filename(filename){
         
 }
 
-void MLCSIO::output(ostream& os, string algo, string alphasets){
+void MLCSIO::output(ostream& os, string algo, string alphasets, string params){
     
     bool flag = false;
     if(seqs.size() == 0){
@@ -34,9 +34,9 @@ void MLCSIO::output(ostream& os, string algo, string alphasets){
     // alg program interface start 
 else if(!exe_topmlcs(seqs, alphasets, os, algo)) flag = true;
 else if(!exe_quickdp(seqs, alphasets, os, algo)) flag = true;
-else if(!exe_promlcs(seqs, alphasets, os, algo)) flag = true;
-else if(!exe_mlcsapp(seqs, alphasets, os, algo)) flag = true;
-else if(!exe_hasmlcs(seqs, alphasets, os, algo)) flag = true;
+else if(!exe_promlcs(seqs, alphasets, os, algo, params)) flag = true;
+else if(!exe_mlcsapp(seqs, alphasets, os, algo, params)) flag = true;
+else if(!exe_hasmlcs(seqs, alphasets, os, algo, params)) flag = true;
     // alg program interface end 
     else{
         os << "'" << algo << "' is undefined.\n";

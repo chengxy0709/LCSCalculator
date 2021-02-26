@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "mlcsapp.h"
 
 MLCSAPP::MLCSAPP(vector<string>& seqs, string& alphabets, int k, int c){
@@ -147,14 +149,29 @@ MLCSAPP::~MLCSAPP(){
         
 }
 
-int exe_mlcsapp(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+int getparams(string& params, int& k, int& c){
+
+    istringstream is(params);
+    string opt;
+
+    while(is >> opt){
+        if(opt == "k") is >> k;
+        else if(opt == "c") is >> c;
+        else return -1;
+    }
+
+    return 0;
+
+}
+
+int exe_mlcsapp(vector<string>& seqs, string& alphasets, ostream& os, string& algo, string params){
     if(algo == MLCSAPPSYM){
         /* else argument*/
         int CONSTK, CONSTC;
-        cout << "The const value k(negative value respresents default value) > ";
-        cin >> CONSTK;
-        cout << "The const value c(negative value respresents default value) > ";
-        cin >> CONSTC;
+        if(getparams(params, CONSTK, CONSTC)){
+            cout << "extra parameter error" << endl;
+            return 0;
+        }
         
         MLCSAPP mlcsapp(seqs, alphasets, CONSTK, CONSTC);
         string lcs;
@@ -173,4 +190,18 @@ int exe_mlcsapp(vector<string>& seqs, string& alphasets, ostream& os, string& al
     else{
         return -1;
     }
+}
+
+void UsageforMLCSAPP(){
+    cout << endl;
+    cout << "Information for MLCSAPP:\n" << endl;
+    cout << "Description:" << endl;
+    cout << "\tThis algorithm is re-implemented according to the article  \"A Fast Heuristic Search Algorithm for Finding \
+the Longest Common Subsequence of Multiple Strings\". This is a variant for A* algorithm." << endl;
+    cout << "commmand:" << endl;
+    cout << "\tLCSCalculator -A MLCSAPP [-i input][-o output][-a alphabets][-e \"[k|c]\"]" << endl;
+    cout << "someelse parameters:" << endl;
+    cout << "\tk: The number of points maintained in the algorithm." << endl;
+    cout << "\tc: The difference between the level of the best point and the level of the worst point." << endl;
+    cout << endl;
 }

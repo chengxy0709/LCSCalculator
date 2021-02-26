@@ -42,6 +42,7 @@ private:
     
 };
 
-int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
+int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo, string params);
+void UsageforPROMLCS();
 
 #endif //PRO_MLCS_H

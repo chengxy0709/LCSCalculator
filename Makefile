@@ -8,7 +8,7 @@ LD = ld
 
 .DEFAULT_GOAL := all
 
-OBJS += common/io.o common/phash.o 
+OBJS += common/io.o common/phash.o common/help.o 
 OBJS += main.o
 OBJS += utils/tool.o
 

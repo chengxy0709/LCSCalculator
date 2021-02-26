@@ -28,7 +28,7 @@ public:
     ~MLCSIO(){}
     
     vector<string> getSeqs() const {return seqs;}
-    void output(ostream& os, string algo, string alphasets);
+    void output(ostream& os, string algo, string alphasets, string params);
     
 private:
     vector<string> seqs;

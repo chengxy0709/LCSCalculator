@@ -1,9 +1,10 @@
+#include <sstream>
 #include "hasmlcs.h"
 
 static int maxlevel = 0;
 static bool opt = false;
 static int cnt = 0;
-static clock_t MAXTIME = 60 * 1000 * 1000;
+static clock_t MAXTIME = 60; // seconds
 static int optimal_len = INT32_MAX;
 
 HASMLCS::HASMLCS(vector<string>& seqs, string& alphabets, int beta, int delta, int K){
@@ -367,24 +368,35 @@ vector< vector<double> > HASMLCS::cal_pr_val(int p, int q, int sigSize){
 
 }
 
-int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+int getparams(string& params, int& beta, int& delta, int& k, clock_t& limitTime, int& optLen, int& algopt){
+
+    istringstream is(params);
+    string opt;
+
+    while(is >> opt){
+        if(opt == "b") is >> beta;
+        else if(opt == "d") is >> delta;
+        else if(opt == "k") is >> k;
+        else if(opt == "t") is >> limitTime;
+        else if(opt == "l") is >> optLen;
+        else if(opt == "a") is >> algopt;
+        else return -1;
+    }
+
+    return 0;
+
+}
+
+int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo, string params){
     if(algo == HASMLCSSYM){
         /* else argument*/
-        int beta, delta, k;
-        cout << "The const value beta(negative value respresents default value) > ";
-        cin >> beta;
-        cout << "The const value delta(negative value respresents default value) > ";
-        cin >> delta;
-        cout << "The const value Kfilter(negative value respresents default value) > ";
-        cin >> k;
-
-        cout << "The limit time (seconds) > ";
-        cin >> MAXTIME;
-        if(MAXTIME <= 0) MAXTIME = 60;
+        int beta = 500, delta = 100, k = 100;
+        int algopt = 0; // 0: A* + BS  1: A* + ACS
+        if(getparams(params, beta, delta, k, MAXTIME, optimal_len, algopt)){
+            cout << "extra parameters error." << endl;
+            return 0;
+        }
         MAXTIME *= 1000 * 1000;
-        cout << "The best solution's length (set -1 for disabling this condition)> ";
-        cin >> optimal_len;
-        if(optimal_len < 0) optimal_len = INT32_MAX; 
         
         g_point_size = seqs.size();
         HASMLCS hasmlcs(seqs, alphasets, beta, delta, k);
@@ -393,7 +405,14 @@ int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& al
         
         start_t = clock();
         MAXTIME += start_t;
-        hasmlcs.run_for_ACS();
+        if(algopt == 0)
+            hasmlcs.run_for_BS();
+        else if(algopt == 1)
+            hasmlcs.run_for_ACS();
+        else{
+            cout << "invalid algorithm index" << endl;
+            return 0;
+        }
         end_t = clock();
         lcs = hasmlcs.LCS();
         os << "Result(by " << algo << "):\n";
@@ -405,4 +424,23 @@ int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& al
     else{
         return -1;
     }
+}
+
+void UsageforHASMLCS(){
+    cout << endl;
+    cout << "Information for HASMLCS:\n" << endl;
+    cout << "Description:" << endl;
+    cout << "\tThis algorithm is re-implemented according to the article  \"Finding Longest Common Subsequences: New anytime A∗ search \
+results\". Two methods are contained in this program and can be selected by using extra parameters 'a'. Someelse options \
+are as follows." << endl;
+    cout << "commmand:" << endl;
+    cout << "\tLCSCalculator -A HASMLCS [-i input][-o output][-a alphabets][-e \"[b|d|k|t|l|a]\"]" << endl;
+    cout << "someelse parameters:" << endl;
+    cout << "\tb: beta, beam size in A* + BS, or coloum size in A* + ACS." << endl;
+    cout << "\td: delta, control the frequency of BS or ACS in hybrid algorithms." << endl;
+    cout << "\tk: Kfliter, the number of the best point in function 'Select'." << endl;
+    cout << "\tt: limit time." << endl;
+    cout << "\tl: the length of the optimal solution(unknown as default)." << endl;
+    cout << "\ta: selected method, 0 is A* + BS, 1 is A* + ACS." << endl;
+    cout << endl;
 }

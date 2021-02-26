@@ -44,6 +44,7 @@ private:
     int CONSTC;
 };
 
-int exe_mlcsapp(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
+int exe_mlcsapp(vector<string>& seqs, string& alphasets, ostream& os, string& algo, string params);
+void UsageforMLCSAPP();
 
 #endif // MLCSAPP_H

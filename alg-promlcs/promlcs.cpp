@@ -1,3 +1,4 @@
+#include <sstream>
 #include "promlcs.h"
 
 struct comp{
@@ -180,12 +181,28 @@ void PRO_MLCS::run(){
     
 }
 
-int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo){
+int getparams(string& params, int& scnum){
+
+    istringstream is(params);
+    string opt;
+
+    while(is >> opt){
+        if(opt == "s") is >> scnum;
+        else return -1;
+    }
+
+    return 0;
+
+}
+
+int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo, string params){
     if(algo == PROMLCSSYM){
         /* else argument*/
-        int scnum;
-        cout << "The number of calculating point in a single iteration(negative value respresents default value) > ";
-        cin >> scnum;
+        int scnum = 1; // The number of calculating point in a single iteration(negative value respresents default value)
+        if(getparams(params, scnum)){
+            cout << "extra parameters error." << endl;
+            return 0;
+        }
         
         PRO_MLCS promlcs(seqs, alphasets, scnum);
         string lcs;
@@ -204,4 +221,16 @@ int exe_promlcs(vector<string>& seqs, string& alphasets, ostream& os, string& al
     else{
         return -1;
     }
+}
+void UsageforPROMLCS(){
+    cout << endl;
+    cout << "Information for PROMLCS:\n" << endl;
+    cout << "Description:" << endl;
+    cout << "\tThis algorithm is re-implemented according to the article  \"A New Progressive Algorithm for a Multiple \
+Longest Common Subsequences Problem and Its Efficient Parallelization. And this program only calculates the length of \
+the optimal solution in a single iteration. You can specify the number of points calculated in sub iteration by using \
+parameter s." << endl;
+    cout << "commmand:" << endl;
+    cout << "\tLCSCalculator -A PROMLCS [-i input][-o output][-a alphabets][-e \"[s]\"]" << endl;
+    cout << endl;
 }

@@ -126,6 +126,7 @@ private:
     
 };
 
-int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
+void UsageforHASMLCS();
+int exe_hasmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo, string params);
 
 #endif // HYBRID_A_STAR_H

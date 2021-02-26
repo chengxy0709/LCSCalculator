@@ -282,3 +282,13 @@ int exe_quickdp(vector<string>& seqs, string& alphasets, ostream& os, string& al
         return -1;
     }
 }
+
+void UsageforQUICKDP(){
+    cout << endl;
+    cout << "Information for QUICKDP:\n" << endl;
+    cout << "Description:" << endl;
+    cout << "\tThis algorithm is re-implemented according to the article  \"A Fast Multiple Longest Common Subsequence (MLCS) Algorithm\"." << endl;
+    cout << "commmand:" << endl;
+    cout << "\tLCSCalculator -A QUICKDP [-i input][-o output][-a alphabets]" << endl;
+    cout << endl;
+}

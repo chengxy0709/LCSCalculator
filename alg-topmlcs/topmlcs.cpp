@@ -177,3 +177,14 @@ int exe_topmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& al
     }
 
 }
+
+void UsageforTOPMLCS(){
+    cout << endl;
+    cout << "Information for TOPMLCS:\n" << endl;
+    cout << "Description:" << endl;
+    cout << "\tThis algorithm is re-implemented according to the article  \"A Novel Fast and Memory Efficient Parallel \
+MLCS Algorithm for Long and Large-Scale Sequences Alignments\"." << endl;
+    cout << "commmand:" << endl;
+    cout << "\tLCSCalculator -A TOPMLCS [-i input][-o output][-a alphabets]" << endl;
+    cout << endl;
+}

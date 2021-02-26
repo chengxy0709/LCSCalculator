@@ -38,5 +38,6 @@ private:
 };
 
 int exe_quickdp(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
+void UsageforQUICKDP();
 
 #endif //QUICK_DP_H

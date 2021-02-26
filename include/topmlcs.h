@@ -43,5 +43,6 @@ private:
 };
 
 int exe_topmlcs(vector<string>& seqs, string& alphasets, ostream& os, string& algo);
+void UsageforTOPMLCS();
 
 #endif // TOP_MLCS_H
